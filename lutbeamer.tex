@@ -210,33 +210,34 @@
 \subsection{Methodology}
 
 \begin{frame}
-    \frametitle{Methodology Overview}
+    \frametitle{Methodology}
     \framesubtitle{Problem Definitions and Setup}
     \begin{itemize}
         \item \textbf{Multisource Time Series Forecasting:}
-              Predict future values from multiple regional sources using observed data on various features like temperature and AQI.
+              Forecast future values using data from multiple regions on features like temperature and AQI.
               \[
                   \text{Forecast } \bm{Y}_{t+1}, \dots, \bm{Y}_{t+Q} \text{ using } f:\mathbb{R}^{N \times P \times C} \rightarrow \mathbb{R}^{N \times Q}
               \]
-              where \( \bm{Y}_t \in \mathbb{R}^N \) is the output vector at time \( t \), \( P \) is the number of past time steps, and \( C \) is the number of features.
+              Here, \( \bm{Y}_t \in \mathbb{R}^N \) denotes the output vector at time \( t \), \( P \) is the number of past time steps considered, and \( C \) represents the number of features per step.
 
         \item \textbf{Regional Carbon Emission Network:}
-              Uses a graph structure to model interdependencies among regions, enhancing prediction accuracy by incorporating spatial dynamics.
+              Models interdependencies among regions through a graph structure to enhance predictive accuracy by integrating spatial dynamics.
               \[
                   \mathcal{G} = (\mathcal{V}, \mathcal{E}, \bm{A}), \quad \bm{A}_{ij} =
                   \begin{cases}
-                      1 & \text{if regions } i \text{ and } j \text{ are connected,} \\
+                      1 & \text{if there is a direct connection between regions } i \text{ and } j, \\
                       0 & \text{otherwise.}
                   \end{cases}
               \]
-              where \( \mathcal{V} \) represents the set of nodes (regions), \( \mathcal{E} \) represents the edges (connections between regions), and \( \bm{A} \) is the adjacency matrix.
+              Here, \( \mathcal{V} \) are nodes (regions), \( \mathcal{E} \) are edges (connections), and \( \bm{A} \) is the adjacency matrix showing regional connections.
     \end{itemize}
 \end{frame}
 
 
+
 \begin{frame}
-    \frametitle{Adaptive Graph Convolutional Recurrent Network (AGCRN)}
-    \framesubtitle{Core Modeling Approach}
+    \frametitle{Methodology}
+    \framesubtitle{AGCRN-Core Modeling Approach}
     \begin{itemize}
         \item \textbf{Node Embedding and Graph Convolution:}
               \[
@@ -244,41 +245,45 @@
               \]
               where \(\bm{I}_N\) is the identity matrix, \(\bm{\Theta}\) is the weight matrix.
         \item \textbf{Integration with GRU:}
-              \begin{align*}
-                  \tilde{\bm{A}} & = \text{softmax}(\text{ReLU}(\bm{E} \cdot \bm{E}^\top))                         \\
-                  \bm{R}_t       & = \sigma(\tilde{\bm{A}}[\bm{X}_t, \bm{H}_{t-1}]\bm{E}\bm{W}_r + \bm{E}\bm{b}_r) \\
-                  \bm{H}_t       & = \bm{R}_t \odot \bm{H}_{t-1} + (1 - \bm{R}_t) \odot \hat{\bm{H}}_t
-              \end{align*}
-        \item \textbf{Purpose:} Captures both spatial and temporal dependencies efficiently, integrating graph-based and sequence-based modeling.
+              \begin{equation*}
+                  \begin{split}
+                      \tilde{\bm A} &= \text{softmax}(\text{ReLU}(\bm E\cdot \bm E^T)) \\
+                      {\bm R_t} &= \sigma\left(\tilde{\bm A}[\bm X_t, \bm H_{t-1}]\bm E\bm W_r + \bm E\cdot\bm b_r \right)
+                      \\
+                      {\bm U_t} &= \sigma\left(\tilde{\bm A}[\bm X_t, \bm H_{t-1}]\bm E\bm W_u + \bm E\cdot\bm b_u \right)
+                      \\
+                      \hat{\bm H}_t &= \tanh\left(\tilde{\bm A}[\bm X_t, \bm U_t\odot\bm H_{t-1}]\bm E\bm W_h + \bm E\cdot\bm b_h \right)
+                      \\
+                      \bm H_t &= \bm R_t\odot \bm H_{t-1} + (1-\bm R_t)\odot \hat{\bm H}_t
+                  \end{split}
+              \end{equation*}
     \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Methodology Detail}
+    \frametitle{Methodology}
     \framesubtitle{Dynamic Spatial-Temporal Modeling}
     \begin{itemize}
         \item \textbf{Dynamic Embeddings:}
-              Generates dynamic node embeddings that adapt over time to capture evolving regional interdependencies. The embedding update mechanism is represented as:
+              Generate node embeddings that evolve over time, reflecting changing regional interdependencies. The update mechanism for these embeddings is given by:
               \[
                   \bm{E}_t = \text{DynamicEmbedding}(\bm{\mathcal{X}}_t), \quad \bm{\mathcal{X}}_t \in \mathbb{R}^{P \times N \times C}
               \]
-              where \( \bm{\mathcal{X}}_t \) denotes the input features over \( P \) past time steps for \( N \) regions with \( C \) features each.
+              where \( \bm{\mathcal{X}}_t \) represents the input features across \( P \) past time steps, \( N \) regions, and \( C \) features.
 
         \item \textbf{Multihead Attention:}
-              Enhances the model's capability to discern distinct temporal patterns, significantly improving predictive accuracy. The multihead attention mechanism can be defined as:
+              Applies multihead attention to capture distinct temporal patterns, enhancing the model's predictive accuracy. The mechanism is defined as:
               \[
                   \text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{(\bm{\mathcal{X}}''_t \bm{W}_Q)(\bm{\mathcal{X}}''_t \bm{W}_K)^\top}{\sqrt{d_e}}\right)\bm{\mathcal{X}}''_t \bm{W}_V
               \]
-              \begin{itemize}
-                  \item \(\mathbf{Q}, \mathbf{K}, \mathbf{V}\) represent the queries, keys, and values, respectively, each transformed by distinct weight matrices \(\bm{W}_Q, \bm{W}_K, \bm{W}_V\).
-                  \item \( \bm{\mathcal{X}}''_t \) is the input to the attention layer, and \( d_e \) is the dimension of the embedding space.
-              \end{itemize}
+              where \(\mathbf{Q}, \mathbf{K}, \mathbf{V}\) are the queries, keys, and values, respectively, transformed by the weight matrices \(\bm{W}_Q, \bm{W}_K, \bm{W}_V\), \( \bm{\mathcal{X}}''_t \) is the processed input, and \( d_e \) denotes the embedding dimension.
     \end{itemize}
 \end{frame}
 
+
 \begin{frame}
-    \frametitle{Dynamic Spatial-Temporal Modeling}
+    \frametitle{Methodology}
     \framesubtitle{Framework Visualization}
     \begin{figure}
         \centering
@@ -290,32 +295,32 @@
 \subsection{Results}
 
 \begin{frame}
-    \frametitle{Comparison of DSTGCRN Performance}
+    \frametitle{Results}
     \framesubtitle{Performance Across Datasets}
     \begin{figure}
         \centering
         \includegraphics[width=0.6\textwidth]{figures/DSTGCRN_tab_results.png}
-        \caption{Comparison of DSTGCRN with baselines after 5 runs on datasets from China, the US, and the EU. Models marked with an asterisk (*) also considered temperature and AQI data for China. Experiments used a 7-day lag, predicting 1 and 3 days ahead (Q=1, Q=3).}
+        \caption{Comparison of DSTGCRN with baselines after 5 runs on datasets from China, the US, and the EU.}
     \end{figure}
 \end{frame}
 
 
 
 \begin{frame}
-    \frametitle{Model Forecast Comparisons}
+    \frametitle{Results}
     \framesubtitle{Long Term Predictions}
 
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{figures/longer_horizon.png}
-        \caption{Performance comparison of AGCRN and DSTGCRN across geographies over longer horizons. This figure displays normalized MAE and RMSE metrics, enabling direct comparison on the same scale.}
+        \caption{Performance comparison of AGCRN and DSTGCRN across geographies over longer horizons.}
     \end{figure}
 
 \end{frame}
 
 \begin{frame}
-    \frametitle{Emission Trends and Model Comparisons}
-    \framesubtitle{Visual Analysis of Data and Performance}
+    \frametitle{Results}
+    \framesubtitle{Factor Analysis}
 
     \begin{columns}[T] % Top-aligned columns
 
@@ -324,7 +329,7 @@
             \begin{figure}
                 \centering
                 \includegraphics[width=\textwidth]{figures/combined_trend_plot.png}
-                \caption{Provincial Carbon Emissions Trends from 2019 to 2022. Each color indicates the emission levels of individual provinces in China. Vertical dashed lines mark the commencement of each year.}
+                \caption{Carbon Emissions Trends from 2019 to 2022 in China.}
             \end{figure}
         \end{column}
 
@@ -333,7 +338,7 @@
             \begin{figure}
                 \centering
                 \includegraphics[width=\textwidth]{figures/comparison_feature.png}
-                \caption{Comparison of model performance metrics across three predictive models.}
+                \caption{Performance metrics across three scenarios.}
             \end{figure}
         \end{column}
 
@@ -341,10 +346,10 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Analysis of DSTGCRN}
-    \framesubtitle{Matrix Evolution and Ablation Studies}
+    \frametitle{Results}
+    \framesubtitle{Relationship Evolution and Ablation Studies}
 
-    \begin{columns}[T] % Top-aligned columns
+    \begin{columns} % Top-aligned columns
 
         % Left column for the first figure
         \begin{column}{0.48\textwidth}
