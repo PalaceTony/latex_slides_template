@@ -111,7 +111,7 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \section{Deterministic Carbon Emissions Modeling}
-\subsection{Introduction}
+\subsection{Introduction to DSTGCRN}
 \begin{frame}
     \frametitle{Introduction}
     \framesubtitle{DSTGCRN: Background and Motivation}
@@ -376,22 +376,22 @@
 
 \subsection{Introduction to ProGen}
 \begin{frame}
-    \frametitle{ProGen Framework}
+    \frametitle{Introduction}
     \framesubtitle{Background and Challenges}
 
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \textbf{Background:}
             \begin{itemize}
-                \item Spatial-temporal data features complex spatial dependencies and dynamic temporal evolution.
-                \item Traditional forecasting models often provide deterministic predictions that fail to capture inherent data uncertainties.
+                \item Spatial-temporal data exhibits complex spatial dependencies and dynamic temporal evolution.
+                \item Conventional forecasting models often provide deterministic outputs, which do not account for data uncertainties.
             \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
             \textbf{Challenges:}
             \begin{itemize}
-                \item Difficulty in modeling the complex structures of spatial-temporal interactions.
-                \item Existing deterministic models do not account for the probabilistic nature of real-world data, limiting their utility for decision-making.
+                \item Modeling spatial-temporal interactions is complex due to their intricate structures.
+                \item Traditional deterministic approaches fail to handle the probabilistic nature of real-world data, impairing decision-making.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -399,82 +399,110 @@
 
 
 \begin{frame}
-    \frametitle{ProGen Framework}
+    \frametitle{Introduction}
     \framesubtitle{Motivation and Contributions}
 
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \textbf{Motivation:}
             \begin{itemize}
-                \item The rise of generative AI, particularly diffusion models, provides new tools for handling data uncertainty through probabilistic forecasts.
-                \item ProGen utilizes stochastic differential equations (SDEs) to model the continuous-time evolution of data, enhancing forecasting accuracy.
+                \item Advances in generative AI, especially diffusion models, offer new avenues for probabilistic forecasting that embrace data uncertainty.
+                \item ProGen leverages stochastic differential equations to model data’s continuous-time evolution, improving forecast precision.
             \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
             \textbf{Contributions:}
             \begin{itemize}
-                \item \textbf{Conceptual:} A novel framework for continuous-time generative modeling for spatial-temporal forecasting.
-                \item \textbf{Technical:} An innovative denoising network and tailored SDE that enhance handling of spatiotemporal correlations.
-                \item \textbf{Empirical:} Demonstrated superiority over existing models through extensive validation on real-world datasets.
+                \item \textbf{Conceptual:} Pioneering a generative modeling framework for continuous-time spatial-temporal forecasting.
+                \item \textbf{Technical:} Develops a unique denoising approach and custom SDE for improved spatiotemporal correlation handling.
+                \item \textbf{Empirical:} Proven enhancements over traditional models validated through rigorous real-world data testing.
             \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
 
 
+\begin{frame}
+    \frametitle{Introduction}
+    \framesubtitle{Practical Implementation and Forecasting Implications}
+
+    ProGen's implementation of DSM and SDEs offers several key advantages for spatio-temporal forecasting:
+    \begin{itemize}
+        \item \textbf{Improved Forecast Accuracy:} By accounting for uncertainty and enabling the model to explore a range of possible futures.
+        \item \textbf{Robustness to Noise:} The use of SDEs helps handle the inherent noise and variability in spatio-temporal data effectively.
+        \item \textbf{Flexibility in Model Application:} Suitable for various types of spatio-temporal data beyond just traffic or weather, including economic and biological datasets.
+    \end{itemize}
+    Additionally, the continuous-time approach of ProGen allows for finer temporal resolution in predictions, crucial for dynamic systems monitoring and decision-making.
+\end{frame}
+
 \subsection{Literature Review}
 \begin{frame}
-    \frametitle{State of the Art in Probabilistic and Spatio-Temporal Forecasting}
-    \framesubtitle{Diffusion Models, Probabilistic Forecasting, and Spatio-Temporal Methods}
+    \frametitle{Literature Review}
+    \framesubtitle{Diffusion Models and Probabilistic Time Series Forecasting}
 
     \begin{columns}[T]
         \begin{column}{0.48\textwidth}
             \textbf{Diffusion Models:}
             \begin{itemize}
-                \item Pioneered by Ho et al. (2020) and Song et al. (2021), focusing on generating data from unconditioned noise through discrete and continuous SDEs.
-                \item Extended to conditional generation for targeted outcomes, incorporating attributes to steer outputs (Nichol and Dhariwal 2021).
-            \end{itemize}
-
-            \textbf{Probabilistic Time Series Forecasting:}
-            \begin{itemize}
-                \item Adaptation of diffusion models for time series forecasting, like TimeGrad and ScoreGrad, faces challenges with autoregressive slow generation and accuracy in long-term forecasting (Shen and Kwok 2023).
-                \item ProGen introduces a continuous approach for enhancing spatial and temporal correlation capture using SDEs.
+                \item Originated by Ho et al. (2020) and Song et al. (2021), using discrete and continuous SDEs to generate data from noise.
+                \item Enhanced for conditional generation by Nichol and Dhariwal (2021), aligning outputs with specific attributes.
             \end{itemize}
         \end{column}
-
         \begin{column}{0.48\textwidth}
-            \textbf{Spatio-Temporal Forecasting:}
+            \textbf{Probabilistic Time Series Forecasting:}
             \begin{itemize}
-                \item Existing models like AGCRN and DSTAGNN use dynamic graphs for forecasting, while STG-NRDE utilizes neural rough differential equations.
-                \item Discrete diffusion models have ventured into probabilistic forecasting but lack continuity in time series data handling, contrasting with ProGen's continuous-time approach (Wen et al. 2023).
+                \item Diffusion models adapted for time series, exemplified by TimeGrad and ScoreGrad, though challenges persist with speed and precision.
+                \item ProGen employs a continuous approach, enhancing the capture of spatial and temporal correlations.
             \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
 
-\subsection{Preliminaries}
 \begin{frame}
-    \frametitle{Probabilistic Spatio-Temporal Forecasting}
+    \frametitle{Literature Review}
+    \framesubtitle{Spatio-Temporal Forecasting Methods}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{Spatio-Temporal Forecasting:}
+            \begin{itemize}
+                \item Techniques such as AGCRN and DSTAGNN use dynamic graphs; STG-NRDE employs neural rough differential equations.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Continuity in Time Series:}
+            \begin{itemize}
+                \item Discrete diffusion models explored probabilistic forecasting but struggled with continuity; ProGen introduces a novel continuous-time method, offering a distinct solution.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\subsection{Methodology}
+\begin{frame}
+    \frametitle{Methodology}
     \framesubtitle{Problem Setup}
 
-    We aim to predict future values of a spatio-temporal series using historical data:
+    Our objective is to forecast future values of a spatio-temporal series based on historical data:
     \begin{itemize}
-        \item Let \(\mathcal{D} = \{\mathbf{X_t}\}_{t=1}^T\) be a dataset where \(\mathbf{X_t} \in \mathbb{R}^{N \times D}\) represents observations at time \(t\), across \(N\) locations and \(D\) features.
-        \item Spatial dependencies are encoded by a graph \(\mathcal{G} = (\mathcal{V}, \mathcal{E}, A)\), with nodes \(\mathcal{V}\), edges \(\mathcal{E}\), and adjacency matrix \(A\).
+        \item Define \(\mathcal{D} = \{\mathbf{X_t}\}_{t=1}^T\) where \(\mathbf{X_t} \in \mathbb{R}^{N \times D}\) denotes observations at time \(t\) across \(N\) locations, each with \(D\) features.
+        \item Spatial dependencies are modeled through a graph \(\mathcal{G} = (\mathcal{V}, \mathcal{E}, A)\), comprising nodes \(\mathcal{V}\), edges \(\mathcal{E}\), and an adjacency matrix \(A\).
     \end{itemize}
+    \vspace{-0.65em}
     \begin{block}{Probabilistic Prediction Task}
-        Estimate the distribution:
+        Aim to predict the distribution:
         \[
             q_X (\mathbf{X_{T+1:T+H}} \mid \mathbf{X_{T-L+1:T}}, \mathcal{G}, \mathcal{C})
         \]
-        Here, \(L\) and \(H\) represent the historical window and forecasting horizon, respectively.
+        where \(L\) and \(H\) denote the length of the historical window and the forecasting horizon, respectively.
     \end{block}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Stochastic Differential Equations}
-    \framesubtitle{Mathematical Foundation}
+    \frametitle{Methodology}
+    \framesubtitle{Stochastic Differential Equations}
 
     SDEs provide a framework for modeling continuous-time stochastic processes:
     \begin{equation}
@@ -490,8 +518,8 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Reverse Stochastic Differential Equations}
-    \framesubtitle{Retrieving Data from Noisy States}
+    \frametitle{Methodology}
+    \framesubtitle{Reverse Stochastic Differential Equations}
 
     Reverse SDEs describe how to denoise data back to its original distribution:
     \begin{equation}
@@ -504,8 +532,8 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Denoising Score Matching (DSM)}
-    \framesubtitle{Score-based Generative Modeling}
+    \frametitle{Methodology}
+    \framesubtitle{Denoising Score Matching (DSM)}
 
     DSM optimizes the match between the gradients of the log probabilities (scores) of the model and data distributions through the diffusion process:
     \begin{equation}
@@ -519,20 +547,8 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Application of DSM and SDEs in ProGen}
-    \framesubtitle{Practical Implementation and Forecasting Implications}
 
-    ProGen's implementation of DSM and SDEs offers several key advantages for spatio-temporal forecasting:
-    \begin{itemize}
-        \item \textbf{Improved Forecast Accuracy:} By accounting for uncertainty and enabling the model to explore a range of possible futures.
-        \item \textbf{Robustness to Noise:} The use of SDEs helps handle the inherent noise and variability in spatio-temporal data effectively.
-        \item \textbf{Flexibility in Model Application:} Suitable for various types of spatio-temporal data beyond just traffic or weather, including economic and biological datasets.
-    \end{itemize}
-    Additionally, the continuous-time approach of ProGen allows for finer temporal resolution in predictions, crucial for dynamic systems monitoring and decision-making.
-\end{frame}
 
-\subsection{Methodology}
 \begin{frame}
     \frametitle{Overview of ProGen Framework}
     \framesubtitle{Operational Processes}
