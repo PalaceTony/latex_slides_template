@@ -103,27 +103,24 @@
     \end{frame}
 }
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Introduction}
-\subsection{Research Overview}
+\section{Research Questions in the Paper}
+% \subsection{Research Overview}
 \begin{frame}
-    \frametitle{Research Overview}
-    \framesubtitle{Investigations on Deterministic and Probabilistic Forecasting}
-    \begin{columns}[T]
-        \begin{column}{0.5\textwidth}
-            \includegraphics
-            [width=\textwidth]{figures/1day_us_0region_modified_new.png}
-            \captionof{figure}{A glimpse of forecasts for deterministic forecasting}
-            \centering
-            Environmental Science.
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \includegraphics
-            [width=\textwidth]{figures/node200_pems04.png}
-            \captionof{figure}{A glimpse of forecasts for probabilistic  forecasting}
-            \centering
-            Generative Modelling.
-        \end{column}
-    \end{columns}
+    \frametitle{Research Questions in the Paper}
+    \framesubtitle{Feeder}
+
+    What real-time data/information can be gained  from the LiW feeder signals that relate to changes in  powder properties beyond mass flow?
+
+    \begin{itemize}
+        \item \textbf{Context:} LiW feeders control mass flow rates of powders, essential for continuous manufacturing precision.
+        \item \textbf{Signals Indicators:} Changes in screw speed, motor torque, and weight fluctuations may reflect variations in:
+              \begin{itemize}
+                  \item Density
+                  \item Particle size
+                  \item Flowability
+              \end{itemize}
+        \item \textbf{Goal:} Utilize feeder signal variations to infer real-time changes in powder properties, improving product quality and process consistency.
+    \end{itemize}
 \end{frame}
 
 
@@ -153,16 +150,9 @@
         \node[at=(current page.center)] {
             \includegraphics[
                 width=\paperwidth,
-                height=\paperheight]{figures/ThankYouPage.png}
+                height=\paperheight]{logos/ThankYouPage.png}
         };
     \end{tikzpicture}
-    % \begin{tikzpicture}[remember picture,overlay]
-    %     \node[at=(current page.center)] {
-    %         \includegraphics[keepaspectratio,
-    %             width=0.65\paperwidth,
-    %             height=\paperheight]{figures/ThankYouPage.png}
-    %     };
-    % \end{tikzpicture}
 \end{frame}
 }
 
