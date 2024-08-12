@@ -25,6 +25,18 @@
 % \setbeameroption{show notes on second screen=right} % Both
 
 
+% Define the custom color using hexadecimal code
+\definecolor{customcolor}{HTML}{123363}
+
+% Define a new block environment with a custom background color and white text
+\newenvironment{customblock}{%
+    \setbeamercolor{block body}{bg=customcolor,fg=white}%
+    \begin{block}%
+}{%
+    \end{block}%
+}
+
+
 \setdepartment{Data Science and Analytics Thrust, Information Hub}
 \institute[HKUSTGZ]{The Hong Kong University of Science and Technology (Guangzhou)}
 \author{Mingze Gong}
@@ -80,16 +92,21 @@
             \usebeamerfont{author}{Presented by \insertauthor} on \insertdate
         \end{beamercolorbox}%\vskip0.5em
         }
-        \note{
-            Dear Professors, Dr. Li and Dr. Zhang, Good morning, given the group project, I will be presenting my individual topic. \\~\\
-
-            I will start with the project overview.
-        }
-
     \end{frame}
 }
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Introduction}
+\subsection{Acknowledgements}
+\begin{frame}
+    \frametitle{Acknowledgements}
+    \begin{customblock}{}
+        I would like to express my sincere gratitude to the committee for your dedication and efforts in joining this event.
+        Thank you to my supervisors and mentors for your guidance and help throughout my research journey.
+        I appreciate it all.
+    \end{customblock}
+\end{frame}
+
+
 \subsection{Research Overview}
 \begin{frame}
     \frametitle{Research Overview}
@@ -237,7 +254,7 @@
 
 \begin{frame}
     \frametitle{Methodology}
-    \framesubtitle{AGCRN-Core Modeling Approach}
+    \framesubtitle{AGCRN \cite{bai2020}-Core Modeling Approach}
     \begin{itemize}
         \item \textbf{Node Embedding and Graph Convolution:}
               \[
@@ -245,7 +262,7 @@
               \]
               where \(\bm{I}_N\) is the identity matrix, \(\bm{\Theta}\) is the weight matrix.
         \item \textbf{Integration with GRU:}
-              \begin{equation*}
+              \begin{equation}
                   \begin{split}
                       \tilde{\bm A} &= \text{softmax}(\text{ReLU}(\bm E\cdot \bm E^T)) \\
                       {\bm R_t} &= \sigma\left(\tilde{\bm A}[\bm X_t, \bm H_{t-1}]\bm E\bm W_r + \bm E\cdot\bm b_r \right)
@@ -256,7 +273,7 @@
                       \\
                       \bm H_t &= \bm R_t\odot \bm H_{t-1} + (1-\bm R_t)\odot \hat{\bm H}_t
                   \end{split}
-              \end{equation*}
+              \end{equation}
     \end{itemize}
 \end{frame}
 
@@ -444,8 +461,8 @@
         \begin{column}{0.48\textwidth}
             \textbf{Diffusion Models:}
             \begin{itemize}
-                \item Originated by Ho et al. (2020) and Song et al. (2021), using discrete and continuous SDEs to generate data from noise.
-                \item Enhanced for conditional generation by Nichol and Dhariwal (2021), aligning outputs with specific attributes.
+                \item Originated by \citet{ho2020} and \citet{song2021}, using discrete and continuous SDEs to generate data from noise.
+                \item Enhanced for conditional generation, aligning outputs with specific attributes.
             \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
@@ -574,7 +591,7 @@
 
     The forward diffusion process incrementally transforms the data points into Gaussian noise:
     \begin{equation}
-        \mathbf{\tilde{X}^t_{F}} = \mu(\mathbf{X_{F}}, t) + \sigma(\mathbf{X_{F}}, t) \times Z, \quad Z \sim \mathcal{N}(0, I)
+        \mathbf{\tilde{X}^t_{F}} = \mu(\mathbf{X_{F}}, t, \beta_0, \beta_1) + \sigma(\mathbf{X_{F}}, t, \beta_0, \beta_1) \times Z,
     \end{equation}
     where \(\mu\) and \(\sigma\) are functions that determine the mean and standard deviation at each time step \(t\). \\~\\
 
@@ -588,7 +605,11 @@
 
     Training is focused on minimizing the discrepancy between the estimated and true gradients of the data:
     \begin{equation}
-        \mathcal{L}(\theta) = \mathbb{E}_{t} \left\{ \mathbb{E}_{\mathbf{X}_{F}, \mathbf{X_H}} \left[ \|\nabla \log p(\tilde{\mathbf{X}}_{F}^t | \mathbf{X}_{F}) - s_\theta(\tilde{\mathbf{X}}_{F}^t, \mathbf{X_H})\|^2 \right] \right\}
+        \begin{aligned}
+            \mathcal{L}(\theta) & = \mathbb{E}_{t} \left\{ \lambda(t) \mathbb{E}_{\mathbf{X}_{F}^0, \mathbf{X_H}} \left[ \mathbb{E}_{\tilde{\mathbf{X}}_{F}^t | \mathbf{X}_{F}^0, \mathbf{X_H}} \right. \right.                                                                  \\
+                                & \quad \left. \left. \left\| s_\theta(\tilde{\mathbf{X}}_{F}^t, \mathbf{X_H}, \mathcal{G}, t, \mathbf{P_H}) - \nabla_{\tilde{\mathbf{X}}_{F}^t} \log p(\tilde{\mathbf{X}}_{F}^t | \mathbf{X}_{F}^0, \mathbf{X_H}) \right\|_2^2 \right] \right\}
+        \end{aligned}
+        \label{eq:loss}
     \end{equation}
     This loss function aims to align the model's score estimates with actual distribution changes, thereby enhancing prediction accuracy.
 \end{frame}
@@ -610,148 +631,162 @@
 \begin{frame}
     \frametitle{Methodology}
     \framesubtitle{Adaptive Reverse Prediction Process}
+    A new Spatial-Temporal SDE (ST SDE) is introduced to guide the reverse diffusion process:
+    \begin{equation}
+        \begin{aligned}
+            d\mathbf{X} & = -\frac{1}{2} \beta(t)\left( \mathbf{X} - \alpha A \mathbf{X} \right)dt + \sqrt{\beta(t)(1 - e^{-2 \int_0^t \beta(s) \, ds})} \, dw,
+        \end{aligned}
+        \label{eq:spatiotemporal_sde}
+    \end{equation}
 
     The reverse SDE effectively restores data from its noisy state using learned scores:
+    \vspace{-0.4em}
     \begin{equation}
-        d\mathbf{X} = (f(\mathbf{X}, t) - g(\mathbf{X}, t)^2 \nabla \log p(\mathbf{X}|t))dt + g(\mathbf{X}, t)d\bar{W}
+        \begin{aligned}
+            \tilde{\mathbf{X}}_{\mathbf{F}}^{t - \frac{1}{K}} & = \tilde{\mathbf{X}}_{\mathbf{F}}^{t} - \left[ -\frac{1}{2} \beta(t) \left( \tilde{\mathbf{X}}_{\mathbf{F}}^{t} - \alpha A \tilde{\mathbf{X}}_{\mathbf{F}}^{t} \right) \, dt \right. \\
+                                                              & \quad \left. - \left(\sqrt{\beta(t)(1 - e^{-2 \int_0^{t} \beta(s) \, ds})} \right)^2 \times s_\theta \right]                                                                         \\
+                                                              & \quad + \sqrt{\beta(t)(1 - e^{-2 \int_0^{t} \beta(s) \, ds})} \cdot dW,
+        \end{aligned}
+        \label{eq:reverse_stdse}
     \end{equation}
-    This equation integrates insights from the score model to reverse the diffusion, guiding the data back to its original state. \\~\\
+    % This equation integrates insights from the score model to reverse the diffusion, guiding the data back to its original state. \\~\\
 
-    ProGen's approach modifies traditional methods by adapting to data dynamics more effectively and efficiently.
+    % ProGen's approach modifies traditional methods by adapting to data dynamics more effectively and efficiently.
 \end{frame}
 
 \subsection{Results}
 \begin{frame}
     \frametitle{Results}
-    \framesubtitle{Overview of ProGen Performance on Full Test Run}
+    \framesubtitle{Overview of ProGen Performance on Full Test Runs}
 
     \begin{figure}[ht]
         \centering
         \includegraphics[width=\textwidth]{figures/det_full_tab.png}
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
+        \caption{Deterministic performance on full PEMS03 and PEMS08 datasets.}
     \end{figure}
 
     \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.35\textwidth]{figures/prob_full_tab.png}
-        \caption{Training loss curves for different spatiotemporal layers in PEMS08 over 100 epochs.}
+        \caption{Probabilistic performance on full PEMS08 dataset.}
     \end{figure}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
+    \frametitle{Results}
     \framesubtitle{Random Test Runs}
 
     \begin{figure}[ht]
         \centering
         \includegraphics[width=0.8\textwidth]{figures/random_runs_tab.png}
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
+        \caption{Overall performance on all datasets.}
     \end{figure}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
+    \frametitle{Results}
+    \framesubtitle{Generating Process Visualization}
 
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.8\textwidth]{figures/pems04_3d_waves_plot.pdf}
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
+        \includegraphics[width=\textwidth]{figures/pems04_3d_waves_plot.pdf}
+        \caption{Visualization of the difference between the mean predictions and the actual values for the average test data in PEMS04.}
     \end{figure}
 \end{frame}
 
 
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
+    \frametitle{Results}
+    \framesubtitle{Generating Process Visualization}
 
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.8\textwidth]{figures/distribution_change_iteration_pems04.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
+        \includegraphics[width=0.8\textwidth]{figures/distribution_change_iteration_pems04.png}
+        \vspace{-1em}
+        \caption{Distribution and mean values of predictions vs. actual truths in PEMS04.}
     \end{figure}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
+    \frametitle{Results}
+    \framesubtitle{Ablation Studies}
 
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.8\textwidth]{figures/train_loss.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
+        \includegraphics[width=0.8\textwidth]{figures/train_loss.png}
+        \caption{Training loss curves for different spatiotemporal layers in PEMS08.}
     \end{figure}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
+    \frametitle{Results}
+    \framesubtitle{Ablation Studies}
 
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/mae_stsde_subvpsde.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
-    \end{figure}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figures/mae_stsde_subvpsde.png}
+                \caption{MAE comparison between the tailored spatial-temporal SDE and the subVP-SDE in PEMS08.}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figures/crps_stsde_subvpsde.png}
+                \caption{CRPS comparison between the tailored spatial-temporal SDE and the subVP-SDE in PEMS08.}
+            \end{figure}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
+    \frametitle{Results}
+    \framesubtitle{Ablation Studies}
 
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/crps_stsde_subvpsde.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
-    \end{figure}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figures/mae_rmse_samples.png}
+                \caption{MAE and RMSE across initial batch iterations in PEMS04.}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figures/crps_mis_samples.png}
+                \caption{CRPS and MIS across initial batch iterations in PEMS04.}
+            \end{figure}
+        \end{column}
+    \end{columns}
+
 \end{frame}
 
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
+    \frametitle{Results}
+    \framesubtitle{Ablation Studies}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figures/pems07_mae_rmse_alpha.png}
+                \caption{MAE and RMSE across initial batch iterations in PEMS04.}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figures/pems07_crps_mis_alpha.png}
+                \caption{CRPS and Miss Rate across initial batch iterations in PEMS04.}
+            \end{figure}
+        \end{column}
+    \end{columns}
 
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/mae_rmse_samples.png       }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
-    \end{figure}
 \end{frame}
-
-\begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
-
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/crps_mis_samples.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
-
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/pems07_mae_rmse_alpha.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Random Test Runs}
-
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/pems07_crps_mis_alpha.png        }
-        \caption{Distribution and mean values of predictions vs. actual truths across initial batch iterations in PEMS04.}
-    \end{figure}
-\end{frame}
-
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %

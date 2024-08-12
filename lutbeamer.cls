@@ -74,9 +74,10 @@
 % \renewenvironment{itemize}{\tempone\addtolength{\itemsep}{0.35\baselineskip}}{\temptwo}
 
 % bibliography style
-\usepackage[style=ieee, backend=biber]{biblatex}
+\usepackage[style=apa, natbib=true, backend=biber]{biblatex}
 % \usepackage[autocite=footnote,style=authortitle,backend=bibtex]{biblatex} 
 \addbibresource{references.bib}
+% \let\cite\autocite
 
 % Set colours
 \setbeamercolor{alerted text}{fg=darkblue}
