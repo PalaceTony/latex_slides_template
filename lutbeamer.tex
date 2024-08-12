@@ -40,8 +40,8 @@
 \setdepartment{Data Science and Analytics Thrust, Information Hub}
 \institute[HKUSTGZ]{The Hong Kong University of Science and Technology (Guangzhou)}
 \author{Mingze Gong}
-\title{Spatio-Temporal Forecasting}
-\subtitle{Deterministic Graph Neural Networks for Carbon Emissions and Generative Probabilistic Stochastic Differential Equation-based Diffusion for Traffic Flow}
+\title{Main Title}
+\subtitle{This is a subtitle}
 \date{\today}
 
 
@@ -103,26 +103,53 @@
     \end{frame}
 }
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Research Questions in the Paper}
-% \subsection{Research Overview}
+\section{Introduction}
+
+\subsection{Research Overview}
+
+
 \begin{frame}
-    \frametitle{Research Questions in the Paper}
-    \framesubtitle{Feeder}
-
-    What real-time data/information can be gained  from the LiW feeder signals that relate to changes in  powder properties beyond mass flow?
-
-    \begin{itemize}
-        \item \textbf{Context:} LiW feeders control mass flow rates of powders, essential for continuous manufacturing precision.
-        \item \textbf{Signals Indicators:} Changes in screw speed, motor torque, and weight fluctuations may reflect variations in:
-              \begin{itemize}
-                  \item Density
-                  \item Particle size
-                  \item Flowability
-              \end{itemize}
-        \item \textbf{Goal:} Utilize feeder signal variations to infer real-time changes in powder properties, improving product quality and process consistency.
-    \end{itemize}
+    \frametitle{Introduction}
+    \framesubtitle{DSTGCRN: Motivations and Contributions}
+    \begin{columns}[T] % Aligns the top of the content in both columns
+        \begin{column}{0.45\textwidth}
+            \textbf{Motivations:}
+            \begin{itemize}
+                \item Overcome limitations of traditional methods in handling complex, dynamic environmental data.
+                \item Leverage insights from the success of Graph Neural Networks (GNNs) in sectors such as traffic and energy to enhance spatial-temporal analysis.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \textbf{Contributions:}
+            \begin{itemize}
+                \item Combines Graph Convolutional Networks (GCN) and Recurrent Neural Networks (RNN) to model evolving inter-regional relationships and spatial-temporal dynamics.
+                \item Boosts predictive accuracy and offers comprehensive insights to guide environmental policy.
+                \item Facilitates informed, real-time policy decisions adapted to specific regional contexts.
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
+\subsection{Literature Review}
+
+\begin{frame}
+    \frametitle{Literature Review}
+    \framesubtitle{Statistical and Machine Learning Approaches}
+    \begin{itemize}
+        \item \textbf{Statistical Methods:}
+              \begin{itemize}
+                  \item \textbf{ARIMA Models:} Employed for time series forecasting; adjusts for trends and seasonality.
+                  \item \textbf{Grey Forecasting Models (GM):} Effective under conditions of limited or incomplete data, applicable in emerging markets.
+                  \item \textbf{Hybrid Models:} Combining GM and ARIMA to address non-linear and non-stationary data, enhancing forecast accuracy.
+              \end{itemize}
+        \item \textbf{Machine Learning Methods:}
+              \begin{itemize}
+                  \item \textbf{Deep Learning:} Excels in learning complex data patterns, significantly improving prediction capabilities.
+                  \item \textbf{Hybrid Approaches:} Integration of neural networks with statistical methods boosts accuracy and reliability.
+                  \item \textbf{Regional Variability:} Challenges include accommodating diverse environmental conditions, impacting scalability and model performance.
+              \end{itemize}
+    \end{itemize}
+\end{frame}
 
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -153,6 +180,13 @@
                 height=\paperheight]{logos/ThankYouPage.png}
         };
     \end{tikzpicture}
+    % \begin{tikzpicture}[remember picture,overlay]
+    %     \node[at=(current page.center)] {
+    %         \includegraphics[keepaspectratio,
+    %             width=0.65\paperwidth,
+    %             height=\paperheight]{figures/ThankYouPage.png}
+    %     };
+    % \end{tikzpicture}
 \end{frame}
 }
 

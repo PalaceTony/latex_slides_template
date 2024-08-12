@@ -186,9 +186,9 @@
     \footnotesize{
     \begin{beamercolorbox}[sep=8pt,left]{author}
       \begin{tabular}[t]{@{}l@{\hspace{10pt}}p{0.45\textwidth}@{}}
-        Prime Supervisor: & Prof. Lei CHEN \\
-        Co-Supervisor: & Prof. Jia LI \\
-        Project Mentor: & Dr. Jenny, Beijinni LI \\
+        % Prime Supervisor: &  \\
+        % Co-Supervisor: &  \\
+        % Project Mentor: &  \\
       \end{tabular}
     \end{beamercolorbox}
     }
