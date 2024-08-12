@@ -196,6 +196,51 @@
 }
 
 
+% % Include necessary packages
+% \usepackage{graphicx}
+% \usepackage{tikz}
+
+% % Define the title page
+% \setbeamertemplate{title page}
+% {
+%   \begin{tikzpicture}[remember picture,overlay]
+%     \node[at=(current page.center)] {\includegraphics[width=\paperwidth,height=\paperheight]{logos/blurred_bg.pdf}};
+%   \end{tikzpicture}
+%   \hbox{%
+%     \begin{beamercolorbox}[wd=0.74\paperwidth,sep=8pt,left]{institute}
+%       \usebeamerfont{institute}{\department\par \insertinstitute}
+%     \end{beamercolorbox}
+%     \begin{beamercolorbox}[wd=0.2\paperwidth,sep=8pt,left]{institute}
+%       \usebeamercolor[fg]{titlegraphic}\hfill\inserttitlegraphic
+%     \end{beamercolorbox}
+%   }%
+%   \begin{centering}
+%     \begin{beamercolorbox}[sep=8pt,left]{title}
+%       \usebeamerfont{title}\MakeUppercase{\inserttitle}\par%
+%       \textcolor{\@DashColor}{\rule[0ex]{1cm}{\@DashHeight}}
+%     \end{beamercolorbox}%
+%     \begin{beamercolorbox}[sep=8pt,left]{subtitle}
+%       \ifx\insertsubtitle\@empty%
+%       \else%
+%         \vskip0em%
+%         {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+%       \fi%     
+%     \end{beamercolorbox}
+%     \vskip0em\par
+%     \footnotesize{
+%     \begin{beamercolorbox}[sep=8pt,left]{author}
+%       \begin{tabular}[t]{@{}l@{\hspace{10pt}}p{0.45\textwidth}@{}}
+%         Prime Supervisor: & Prof. Lei CHEN \\
+%         Co-Supervisor: & Prof. Jia LI \\
+%         Project Mentor: & Dr. Jenny, Beijinni LI \\
+%       \end{tabular}
+%     \end{beamercolorbox}
+%     }
+%   \end{centering}
+% }
+
+
+
 % Define the bottom of each standard frame
 \setbeamertemplate{footline}{
   % bottom bar
