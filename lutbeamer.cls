@@ -237,21 +237,21 @@
   \end{beamercolorbox}
 }
 
-% add navigation symbols
-\setbeamercolor{mycolor}{fg=white}%,bg=structure!30}
-\addtobeamertemplate{footline}{
-  \leavevmode%
-  \hbox{%
-    \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,right,rightskip=5mm]{mycolor}%
-      \usebeamercolor[fg]{navigation symbols}\insertslidenavigationsymbol%
-      \insertframenavigationsymbol%
-      \insertsubsectionnavigationsymbol%
-      \insertsectionnavigationsymbol%
-      \insertdocnavigationsymbol%
-      \insertbackfindforwardnavigationsymbol%
-    \end{beamercolorbox}%
-  }%
-  \vskip0.5pt%
-}{}
+% % add navigation symbols
+% \setbeamercolor{mycolor}{fg=white}%,bg=structure!30}
+% \addtobeamertemplate{footline}{
+%   \leavevmode%
+%   \hbox{%
+%     \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=.5ex,right,rightskip=5mm]{mycolor}%
+%       \usebeamercolor[fg]{navigation symbols}\insertslidenavigationsymbol%
+%       \insertframenavigationsymbol%
+%       \insertsubsectionnavigationsymbol%
+%       \insertsectionnavigationsymbol%
+%       \insertdocnavigationsymbol%
+%       \insertbackfindforwardnavigationsymbol%
+%     \end{beamercolorbox}%
+%   }%
+%   \vskip0.5pt%
+% }{}
 
 \mode<all>
