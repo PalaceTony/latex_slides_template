@@ -550,8 +550,8 @@
 
 
 \begin{frame}
-    \frametitle{Overview of ProGen Framework}
-    \framesubtitle{Operational Processes}
+    \frametitle{Methodology}
+    \framesubtitle{Overview of ProGen Framework}
 
     ProGen combines a forward diffusion process with a reverse prediction process:
     \begin{itemize}
@@ -569,54 +569,61 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Forward Diffusion Process}
-    \framesubtitle{Transforming Data into Gaussian State}
+    \frametitle{Methodology}
+    \framesubtitle{Forward Diffusion Process}
 
-    The forward process perturbs the data point by point into Gaussian noise:
+    The forward diffusion process incrementally transforms the data points into Gaussian noise:
     \begin{equation}
         \mathbf{\tilde{X}^t_{F}} = \mu(\mathbf{X_{F}}, t) + \sigma(\mathbf{X_{F}}, t) \times Z, \quad Z \sim \mathcal{N}(0, I)
     \end{equation}
-    where \(\mu\) and \(\sigma\) control the mean and standard deviation across discretized time steps.
+    where \(\mu\) and \(\sigma\) are functions that determine the mean and standard deviation at each time step \(t\). \\~\\
 
-    This process trains the model to understand and simulate the transition from real data distributions to noise.
+    This method trains the model to simulate transitions from actual data distributions to a noise state, aiding in understanding the underlying data dynamics.
 \end{frame}
 
-\begin{frame}
-    \frametitle{Training the Denoising Score Model}
-    \framesubtitle{Optimizing the Score Estimation}
 
-    Training focuses on minimizing the discrepancy between the estimated and true data gradients:
+\begin{frame}
+    \frametitle{Methodology}
+    \framesubtitle{Training the Denoising Score Model}
+
+    Training is focused on minimizing the discrepancy between the estimated and true gradients of the data:
     \begin{equation}
         \mathcal{L}(\theta) = \mathbb{E}_{t} \left\{ \mathbb{E}_{\mathbf{X}_{F}, \mathbf{X_H}} \left[ \|\nabla \log p(\tilde{\mathbf{X}}_{F}^t | \mathbf{X}_{F}) - s_\theta(\tilde{\mathbf{X}}_{F}^t, \mathbf{X_H})\|^2 \right] \right\}
     \end{equation}
-    This loss function aligns the model's score estimates with the true distribution changes, enhancing prediction accuracy.
-
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.75\textwidth]{figures/ProGen_model.pdf}
-        \caption{Architecture of the Denoising Score Matching Model in ProGen.}
-        \label{fig:model}
-    \end{figure}
-
+    This loss function aims to align the model's score estimates with actual distribution changes, thereby enhancing prediction accuracy.
 \end{frame}
 
 \begin{frame}
-    \frametitle{Adaptive Reverse Prediction Process}
-    \framesubtitle{Restoring Original Data Distribution}
+    \frametitle{Methodology}
+    \framesubtitle{Model Architecture}
+    \vspace{-1em}
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.7\textwidth]{figures/ProGen_model.pdf}
+        \vspace{-0.7em}
+        \caption{Architecture of the Denoising Score Matching Model in ProGen.}
+        \label{fig:model}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Methodology}
+    \framesubtitle{Adaptive Reverse Prediction Process}
 
     The reverse SDE effectively restores data from its noisy state using learned scores:
     \begin{equation}
         d\mathbf{X} = (f(\mathbf{X}, t) - g(\mathbf{X}, t)^2 \nabla \log p(\mathbf{X}|t))dt + g(\mathbf{X}, t)d\bar{W}
     \end{equation}
-    This equation integrates insights from the score model to reverse the diffusion, guiding the data back to its original state.
+    This equation integrates insights from the score model to reverse the diffusion, guiding the data back to its original state. \\~\\
 
     ProGen's approach modifies traditional methods by adapting to data dynamics more effectively and efficiently.
 \end{frame}
 
 \subsection{Results}
 \begin{frame}
-    \frametitle{Overview of ProGen Performance}
-    \framesubtitle{Full Test Run}
+    \frametitle{Results}
+    \framesubtitle{Overview of ProGen Performance on Full Test Run}
 
     \begin{figure}[ht]
         \centering
